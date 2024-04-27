@@ -1,16 +1,9 @@
 #include "sort.h"
 
-/**
- * swapint - Swaps two integers
- * @n1: The first integer
- * @n2: The second integer
- * Return: Nothing (void)
- */
-
-void swapint(int *n1, int *n2);
+void swapnodes(listint_t *node1, listint_t *node2);
 
 /**
- * insertion_sort - Implementation for the
+ * insertion_sort_list - Implementation for the
  * insertion sort algorithm with linked lists
  * @list: The head node of the list
  * Return: Nothing (void)
@@ -18,39 +11,78 @@ void swapint(int *n1, int *n2);
 
 void insertion_sort_list(listint_t **list)
 {
-	const int key;
+	listint_t *moving = (*list)->next, *stationary;
 	unsigned int i = 0, j = 0;
-	listint_t *current, *backward;
 
 	if (!list || !*list || !(*list)->next)
 		return;
 
-	current = (*list)->next;
-	while (current)
+	while (moving)
 	{
-		key = current->n;
-		backward = current;
-		current = current->next;
-		while (backward)
+		i++;
+		if (moving->n < moving->prev->n)
 		{
-			if (backward->prev->n > backward->n)
+			swapnodes(moving->prev, moving);
+			if (!moving->prev)
+				*list = moving;
+			print_list((const listint_t *)*list);
+
+			stationary = moving->next;
+			for (j = i - 1; j > 0 && moving->prev ; j--)
 			{
-				swapint(&(backward->prev->n) > &(backward->n));
-				if (!backward->prev)
-					*list = backward;
-				print_list((const listint_t *)*list);
+				if (moving->n < moving->prev->n)
+				{
+					swapnodes(moving->prev, moving);
+					/* If swapped with the head */
+					if (!moving->prev)
+						*list = moving;
+					print_list((const listint_t *)*list);
+				}
+				else
+					break;
 			}
-			else
-				backward = backward->prev;
+			moving = stationary;
 		}
+		else
+			moving = moving->next;
 	}
 }
 
-void swapint(int *n1, int *n2)
-{
-	int temp;
+/**
+ * swapnodes - Swaps two nodes in
+ * a linked list
+ * @node1: The 1st node
+ * @node2: The 2nd node
+ * Return: Nothing (void)
+ */
 
-	temp = *n1;
-	*n1 = *n2;
-	*n2 = temp;
+void swapnodes(listint_t *node1, listint_t *node2)
+{
+	/*
+	 * Cutting the connections between
+	 * the swapped nodes
+	 */
+	node1->next = node2->next;
+	node2->prev = node1->prev;
+
+	/* Reconnecting the nodes in order */
+	node1->prev = node2;
+	node2->next = node1;
+
+	if (node1->next)
+	{
+		/*
+		 * For the node next to node1
+		 * but its prev still pointing to node2
+		 */
+		node1->next->prev = node1;
+	}
+	if (node2->prev)
+	{
+		/*
+		 * For the node previous to node2
+		 * but its next still pointing to node1
+		 */
+		node2->prev->next = node2;
+	}
 }
