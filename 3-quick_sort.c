@@ -47,34 +47,13 @@ void swapint(int *n1, int *n2)
  * Return: The index of the pivot as integer
  */
 
-/*int
-__quick_sort_partition(int *array, size_t size, size_t lower, size_t upper)
-{
-	size_t j;
-	int pivot = array[upper];
-	int i = lower - 1;
-
-	for (j = lower; j <= upper - 1; j++)
-	{
-		if (pivot > array[j])
-		{
-			i++;
-			swapint(&array[i], &array[j]);
-			print_array(array, size);
-		}
-	}
-	//Get the pivot in place 
-	swapint(&array[upper], &array[++i]);
-	print_array(array, size);
-	return ((size_t)i);
-}*/
 int __quick_sort_partition(int *array, size_t size, int lower, int upper)
 {
 	int pivot = array[upper];
 	int i = (lower - 1), j;
-  
+
 	for (j = lower; j <= upper - 1; j++)
-	{  
+	{
 		if (array[j] < pivot)
 		{
 			i++;
